@@ -1,7 +1,8 @@
-from django.http.response import HttpResponseRedirectBase
+from django.http.response import Http404, HttpResponseRedirectBase
 from django.urls import path
+from .views import EmployeeListView, EmployeeDetailView
 
 urlpatterns = [
-    path('', HttpResponseRedirectBase, name='index')
+    path('', EmployeeListView.as_view(), name='index'),
+    path('<int:pk>', EmployeeDetailView.as_view(), name='employee')
 ]
-

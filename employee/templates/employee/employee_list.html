@@ -1,0 +1,33 @@
+{% extends 'employee/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block Title %}Список сотрудников{% endblock %}
+
+{% block BodyContent %}
+    <h1>Сотрудники</h1>
+    <ul>
+    {% for employee in page_obj %}
+        <li><a href="{% url 'employee' employee.pk %}">{{ employee.get_full_name }}</a></li>
+    {% empty %}
+        <li>Нет ни одного сотрудника.</li>
+    {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        <dev class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}">предыдущая</a>
+            {% endif %}
+
+            <dev class="current">
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+            </def>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">следующая</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+            {% endif %}
+        </dev>
+    </div>
+{% endblock %}

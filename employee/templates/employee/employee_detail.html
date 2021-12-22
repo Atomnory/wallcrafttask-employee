@@ -1,0 +1,21 @@
+{% extends 'employee/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block Title %}{{ object.get_full_name }}{% endblock %}
+
+{% block BodyContent %}
+    <p>ФИО: {{ object.get_full_name }}</p>
+    <p>Дата рождения: {{ object.birth_date }}</p>
+    <p>Email: {{ object.email }}</p>
+    <p>Телефон: {{ object.phone_number }}</p>
+    <p>Дата начала работы: {{ object.job_start_date }}</p>
+    <p>Дата окончания работы: 
+        {% if object.job_end_date %}
+            {{ object.job_end_date }}
+        {% else %}
+            всё ещё работает.
+        {% endif %}
+    </p>
+    <p>Должность: {{ object.job_title }}</p>
+    <p>Отдел: {{ object.department.name }}</p>
+{% endblock %}
