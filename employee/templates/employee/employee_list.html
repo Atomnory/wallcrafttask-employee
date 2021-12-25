@@ -5,6 +5,8 @@
 {% block Title %}Список сотрудников{% endblock %}
 
 {% block BodyContent %}
+    <a href="{% url 'alphabetical' %}">Alphabetical</a>
+
     <form action="" method="get">
         {{ filter.form.as_p }}
         <button type="submit">Искать</button>
