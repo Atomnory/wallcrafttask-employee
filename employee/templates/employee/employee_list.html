@@ -1,33 +1,43 @@
 {% extends 'employee/layout.html' %}
 {% load crispy_forms_tags %}
+{% load employee_tags %}
 
 {% block Title %}Список сотрудников{% endblock %}
 
 {% block BodyContent %}
-    <h1>Сотрудники</h1>
-    <ul>
-    {% for employee in page_obj %}
-        <li><a href="{% url 'employee' employee.pk %}">{{ employee.get_full_name }}</a></li>
-    {% empty %}
-        <li>Нет ни одного сотрудника.</li>
-    {% endfor %}
-    </ul>
+    <form action="" method="get">
+        {{ filter.form.as_p }}
+        <button type="submit">Искать</button>
+    </form>
 
-    <div class="pagination">
-        <dev class="step-links">
+    <h1>Сотрудники</h1>
+    {% if page_obj %}
+    <div class="list-group">
+        {% for employee in page_obj %}
+            <a href="{% url 'employee' employee.pk %}" class="list-group-item list-group-item-action list-group-item-info">{{ employee.get_full_name }} из {{ employee.department.name }}</a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-info">Нет ни одного сотрудника.</li>
+    </ul>
+    {% endif %}
+   
+    {% if is_paginated %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; первая</a>
-                <a href="?page={{ page_obj.previous_page_number }}">предыдущая</a>
+                <li class="page-item"><a class="page-link" href="?{% page_replace page=1 %}">&laquo; первая</a></li>
+                <li class="page-item"><a class="page-link" href="?{% page_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a></li>
             {% endif %}
 
-            <dev class="current">
-                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
-            </def>
+            <li class="page-item active" aria-current="page"><span class="page-link">{{ page_obj.number }}</span></li>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">следующая</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+                <li class="page-item"><a class="page-link" href="?{% page_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a></li>
+                <li class="page-item"><a class="page-link" href="?{% page_replace page=page_obj.paginator.num_pages %}">последняя &raquo;</a></li>
             {% endif %}
-        </dev>
-    </div>
+        </ul>
+    </nav>
+    {% endif %}
 {% endblock %}
