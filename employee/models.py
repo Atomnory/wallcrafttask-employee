@@ -22,16 +22,18 @@ class Employee(models.Model):
     job_start_date = models.DateField(verbose_name='Job start date')
     job_end_date = models.DateField(verbose_name='Job end date', null=True, blank=True)
     job_title = models.CharField(verbose_name='Job title', max_length=40)
-    department = models.ForeignKey(to=Department, on_delete=models.PROTECT, verbose_name='Department')
+    department = models.ForeignKey(to=Department,
+                                   on_delete=models.PROTECT,
+                                   verbose_name='Department')
 
     class Meta:
         ordering = ['pk']
-        
+
     def __str__(self) -> str:
-        return '%s %s' % (self.first_name, self.last_name)
-    
+        return f'{self.first_name} {self.last_name}'
+
     def get_absolute_url(self) -> str:
         return reverse('employee', kwargs={"pk": self.pk})
-    
+
     def get_full_name(self) -> str:
-        return '%s %s %s' % (self.first_name, self.patronymic_name, self.last_name)
+        return f'{self.last_name} {self.first_name} {self.patronymic_name}'

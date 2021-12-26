@@ -16,7 +16,7 @@
     {% if page_obj %}
     <div class="list-group">
         {% for employee in page_obj %}
-            <a href="{% url 'employee' employee.pk %}" class="list-group-item list-group-item-action list-group-item-info">{{ employee.get_full_name }} из {{ employee.department.name }}</a>
+            <a href="{% url 'employee' employee.pk %}" class="list-group-item list-group-item-action list-group-item-info">{{ employee }} из {{ employee.department.name }}</a>
         {% endfor %}
     </div>
     {% else %}
