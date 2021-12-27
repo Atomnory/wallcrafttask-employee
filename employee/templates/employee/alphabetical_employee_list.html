@@ -1,22 +1,11 @@
-{% extends 'employee/layout.html' %}
-{% load crispy_forms_tags %}
+{% extends 'employee/alphabetical_groups.html' %}
 
-{% block Title %}Alphabetical last names{% endblock %}
-
-{% block BodyContent %}
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            {% for group in groups %}
-                <li class="page-item"><a class="page-link" href="{% url 'alpha_list' group.0 %}">{{ group.0 }}-{{ group|last }}</a></li>
-            {% endfor %}
-        </ul>
-    </nav>
-
+{% block EmployeesList %}
     {% if employees %}
-    <div class="list-group">
+    <div class="list-group w-75 p-3">
         {% for employee in employees %}
-            <a href="{% url 'employee' employee.pk %}" class="list-group-item list-group-item-action list-group-item-info">{{ employee.get_full_name }}</a>
+            <a href="{% url 'employee' employee.pk %}" class="list-group-item list-group-item-action mb-2">{{ employee.get_full_name }}</a>
         {% endfor %}
     </div>
     {% endif %}
-{% endblock %}
+{% endblock EmployeesList %}

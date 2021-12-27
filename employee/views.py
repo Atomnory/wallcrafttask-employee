@@ -1,9 +1,9 @@
+from typing import Dict, Any
 from django.views.generic import ListView, DetailView
+from django_filters.views import FilterView
 from .models import Employee
 from .filters import EmployeeFilter
-from django_filters.views import FilterView
 from .services import get_employees_by_last_name_group, AlphabeticalGrouper
-from typing import Dict, Any
 
 
 class EmployeeFilterListView(FilterView):
@@ -18,11 +18,11 @@ class EmployeeDetailView(DetailView):
 
 
 class AlphabeticalEmployeeListView(ListView):
-    template_name = 'employee/alphabetical_employee_list.html'
+    template_name = 'employee/alphabetical_groups.html'
     context_object_name = 'groups'
 
     def get_queryset(self):
-        result_groups = AlphabeticalGrouper.get_alphabetical_groups()
+        result_groups = AlphabeticalGrouper().get_alphabetical_groups()
         self.request.session['result_groups'] = result_groups
         return result_groups
 
@@ -30,7 +30,7 @@ class AlphabeticalEmployeeListView(ListView):
 class AlphabeticalNameListView(ListView):
     template_name = 'employee/alphabetical_employee_list.html'
     context_object_name = 'employees'
-    # TODO: fix template when in groups only one letter
+    
     def get_queryset(self):
         self.groups = self.request.session.get('result_groups')
         return get_employees_by_last_name_group(self.groups, self.kwargs.get('letter'))

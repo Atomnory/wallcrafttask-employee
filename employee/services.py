@@ -1,16 +1,14 @@
 from .models import Employee
 from typing import List
 
-# TODO: check all pages have bootstrap
-# TODO: add tests to all views, models, services
-# TODO: add readme to deploy, git and deploy 
+# TODO: add readme to deploy, git and deploy
 
 class AlphabeticalGrouper:
     def __init__(self) -> None:
         self._employees = Employee.objects.order_by('last_name')
         self._number_of_names = Employee.objects.count()
 
-        self._groups_calculator = AlphabetGroupsCalculator(self._number_of_names)
+        self._groups_calculator = AlphabetBestGroupCalculator(self._number_of_names)
         self._alphabet = []
         self._alphabet_weights = []
         self._alphabetical_result_groups = [[]]
@@ -27,19 +25,15 @@ class AlphabeticalGrouper:
             return self._alphabet
  
         self._regroup_alphabet_with_best_grouping_method()
-        print('Best delimeter:', self._groups_calculator.best_delimeter)
-        print('Result groups:', self._alphabetical_result_groups)
         return self._alphabetical_result_groups
 
     def _is_employees_less_min_groups_amount(self):
         if len(self._employees) < self._groups_calculator.min_groups_number:
-            print(f'Database has less rows than {self._groups_calculator.min_groups_number}.')
             return True
         return False
 
     def _is_last_name_first_letters_less_min_groups_amount(self):
         if self._groups_calculator.best_delimeter == 0:
-            print(f'Database has less than {self._groups_calculator.min_groups_number} different first letter of last name.')
             return True
         return False
 
@@ -69,7 +63,7 @@ class AlphabeticalGrouper:
                     self._alphabetical_result_groups.append([])
 
 
-class AlphabetGroupsCalculator:
+class AlphabetBestGroupCalculator:
     def __init__(self, number_of_names: int) -> None:
         self._min_groups_number = 3
         self._max_groups_number = 7
@@ -82,6 +76,7 @@ class AlphabetGroupsCalculator:
         self._best_diff_epsilon = self._number_of_names
 
     def find_best_grouping_method(self, alphabet_weights: List[int]):
+        self._check_alphabet_weights(alphabet_weights)
         self._alphabet_weights = alphabet_weights
         for delimeter in range(self._min_groups_number, self._max_groups_number+1):
             if len(self._alphabet_weights) < delimeter:
@@ -92,15 +87,17 @@ class AlphabetGroupsCalculator:
 
             self._calculate_groups(average_number_names, groups)
             diff_epsilon = self._find_diff_epsilon(average_number_names, groups)
-            print('Average number names:', average_number_names)
-            print('Groups:', groups)
-            print('Diff epsilon:', diff_epsilon)
             if diff_epsilon <= self._best_diff_epsilon:
                 self._best_delimeter = delimeter
                 self._best_groups = groups
                 self._best_diff_epsilon = diff_epsilon
-        print('Best groups:', self._best_groups)
-        print('Best diff epsilon:', self._best_diff_epsilon)
+
+    def _check_alphabet_weights(self, alphabet_weights: List[int]):
+        sum = 0
+        for i in alphabet_weights:
+            sum += i
+        if self._number_of_names != sum:
+            raise Exception(f'Number of names: {self._number_of_names} and alphabet weights of that names: {alphabet_weights} are not match.')
 
     def _calculate_groups(self, average_number_names: float | int, groups: List[int]):
         i = 0
@@ -145,6 +142,8 @@ def get_employees_by_last_name_group(groups: List[List[str]], chosen_group: str)
 
     'chosen_group' is a first letter of some group from 'groups'.
     """
+    if not groups:
+        return groups
     result_last_names = []
     for group in groups:
         if chosen_group == group[0]:

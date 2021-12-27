@@ -5,29 +5,27 @@
 {% block Title %}Список сотрудников{% endblock %}
 
 {% block BodyContent %}
-    <a href="{% url 'alphabetical' %}">Alphabetical</a>
-
-    <form action="" method="get">
-        {{ filter.form.as_p }}
-        <button type="submit">Искать</button>
+    <form action="" method="get" class="w-25 p-3">
+        {{ filter.form|crispy }}
+        <button type="submit" class="btn btn-success mt-1">Искать</button>
     </form>
 
-    <h1>Сотрудники</h1>
+    <h1 class="ps-3">Сотрудники</h1>
     {% if page_obj %}
-    <div class="list-group">
+    <div class="list-group w-75 p-3">
         {% for employee in page_obj %}
-            <a href="{% url 'employee' employee.pk %}" class="list-group-item list-group-item-action list-group-item-info">{{ employee }} из {{ employee.department.name }}</a>
+            <a href="{% url 'employee' employee.pk %}" class="list-group-item list-group-item-action mb-2">{{ employee }}</a>
         {% endfor %}
     </div>
     {% else %}
     <ul class="list-group">
-        <li class="list-group-item list-group-item-info">Нет ни одного сотрудника.</li>
+        <li class="list-group-item w-75 p-3 mx-auto">Нет ни одного сотрудника.</li>
     </ul>
     {% endif %}
    
     {% if is_paginated %}
     <nav aria-label="Page navigation example">
-        <ul class="pagination">
+        <ul class="pagination p-3">
             {% if page_obj.has_previous %}
                 <li class="page-item"><a class="page-link" href="?{% page_replace page=1 %}">&laquo; первая</a></li>
                 <li class="page-item"><a class="page-link" href="?{% page_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a></li>

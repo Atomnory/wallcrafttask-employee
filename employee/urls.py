@@ -8,5 +8,5 @@ urlpatterns = [
     path('', EmployeeFilterListView.as_view(), name='index'),
     path('<int:pk>', EmployeeDetailView.as_view(), name='employee'),
     path('alphabetical', AlphabeticalEmployeeListView.as_view(), name='alphabetical'),
-    path('<str:letter>', AlphabeticalNameListView.as_view(), name='alpha_list')
+    path('<str:letter>', AlphabeticalNameListView.as_view(), name='alphabet_list')
 ]
