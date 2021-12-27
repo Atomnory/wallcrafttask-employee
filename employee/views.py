@@ -33,7 +33,10 @@ class AlphabeticalNameListView(ListView):
     
     def get_queryset(self):
         self.groups = self.request.session.get('result_groups')
-        return get_employees_by_last_name_group(self.groups, self.kwargs.get('letter'))
+        try:
+            return get_employees_by_last_name_group(self.groups, self.kwargs.get('letter'))
+        except Exception:
+            return None
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
