@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import conf
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,15 +22,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('WALLCRAFT_TASK_SECRET_KEY')
+SECRET_KEY = conf.WALLCRAFT_TASK_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -82,11 +83,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_POSTGRES_WALLCRAFT_NAME'),
-        'USER': os.environ.get('DB_POSTGRES_USER'),
-        'PASSWORD': os.environ.get('DB_POSTGRES_USER_PASSWORD'),
-        'HOST': os.environ.get('DB_POSTGRES_HOST'),
-        'PORT': os.environ.get('DB_POSTGRES_PORT')
+        'NAME': conf.DB_POSTGRES_WALLCRAFT_NAME,
+        'USER': conf.DB_POSTGRES_USER,
+        'PASSWORD': conf.DB_POSTGRES_USER_PASSWORD,
+        'HOST': conf.DB_POSTGRES_HOST,
+        'PORT': conf.DB_POSTGRES_PORT
     }
 }
 
