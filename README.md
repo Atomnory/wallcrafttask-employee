@@ -1,35 +1,37 @@
 Employee task
+=============
+Deploy Ubuntu, Nginx, Gunicorn:
 
-#. Update python to 3.10 ::
+#. Update python to 3.10
 
 	sudo add-apt-repository ppa:deadsnakes/ppa
 	sudo apt update
 	sudo apt install python3.10 python3-pip 
 	sudo apt install python3.10-venv python3.10-dev libpq-dev postgresql postgresql-contrib nginx curl 
 
-#. Clone repository ::
+#. Clone repository
 
 	git clone https://github.com/Atomnory/wallcrafttask-employee.git sources/Django/WallCraftTask
 
-#. Create .venv ::
+#. Create .venv
 
     python3.10 -m venv sources/Django/WallCraftTask/.venv
 
-#. Activate venv with ::
+#. Activate venv with
 
 	. sources/Django/WallCraftTask/.venv/bin/activate
 	python3.10 -m pip install --upgrade pip
 
-#. Install dependencies ::
+#. Install dependencies
 
 	pip install -r sources/Django/WallCraftTaskrequirements.txt
 	deactivate
 
-#. Start postgresql service ::
+#. Start postgresql service
 
 	sudo service postgresql start
 
-#. Create db to app ::
+#. Create db to app
 
 	sudo -u postgres psql
 
@@ -41,7 +43,7 @@ Employee task
 	GRANT ALL PRIVILEGES ON DATABASE wallcrafttask TO <username>;
 	\q
 
-#. Change variables in conf.py file ::
+#. Change variables in conf.py file
 
 	WALLCRAFT_TASK_SECRET_KEY="<secret_key>"
 	DB_POSTGRES_WALLCRAFT_NAME='wallcrafttask'
@@ -50,29 +52,29 @@ Employee task
 	DB_POSTGRES_HOST='127.0.0.1'
 	DB_POSTGRES_PORT='5432'
 
-#. Activate venv with ::
+#. Activate venv with
 
 	cd sources/Django/WallCraftTask
 	. .venv/bin/activate
 
-#. Migrate app database ::
+#. Migrate app database
 
 	python manage.py migrate
 
-#. Create super user ::
+#. Create super user
 
 	python manage.py createsuperuser
 
-#. Test gunicorn ::
+#. Test gunicorn
 
 	gunicorn --bind 0.0.0.0:8000 config.wsgi
 	deactivate
 
-#. Creating socket and systems files for Gunicorn ::
+#. Creating socket and systems files for Gunicorn
 
 	sudo vim /etc/systemd/system/gunicorn.socket
 
-   Inside ::
+   Inside:
 
     [Unit]
     Description=gunicorn socket
@@ -83,11 +85,11 @@ Employee task
     [Install]
     WantedBy=sockets.target
 
-   Create service ::
+   Create service:
 
 	sudo vim /etc/systemd/system/gunicorn.service
 
-   Inside ::
+   Inside:
 
     [Unit]
     Description=gunicorn daemon
@@ -102,12 +104,12 @@ Employee task
     [Install]
     WantedBy=multi-user.target
 
-#. Start and actvate socket ::
+#. Start and actvate socket
 
 	sudo systemctl start gunicorn.socket
 	sudo systemctl enable gunicorn.socket
 
-   Test ::
+   Test:
 
 	sudo systemctl status gunicorn.socket
 	file /run/gunicorn.sock -> /run/gunicorn.sock: socket
@@ -117,11 +119,11 @@ Employee task
 	sudo systemctl status gunicorn
 	curl --unix-socket /run/gunicorn.sock localhost
 
-#. SetUp Nginx as proxy ::
+#. SetUp Nginx as proxy
 
 	sudo vim /etc/nginx/sites-available/config
 
-   Inside ::
+   Inside:
 
     server {
         listen 80;
@@ -138,14 +140,15 @@ Employee task
         }
     }
 
-   Create link and restart nginx ::
+   Create link and restart nginx:
+   
 	sudo ln -s /etc/nginx/sites-available/config /etc/nginx/sites-enabled
 	sudo nginx -t
 	sudo systemctl restart nginx
 
 
-# Restarts ::
+# Restarts :
 
-sudo systemctl daemon-reload
-sudo systemctl restart gunicorn
-sudo systemctl restart nginx
+	sudo systemctl daemon-reload
+	sudo systemctl restart gunicorn
+	sudo systemctl restart nginx
