@@ -24,7 +24,7 @@ Deploy Ubuntu, Nginx, Gunicorn:
 
 #. Install dependencies
 
-	pip install -r sources/Django/WallCraftTaskrequirements.txt
+	pip install -r sources/Django/WallCraftTask/requirements.txt
 	deactivate
 
 #. Start postgresql service
